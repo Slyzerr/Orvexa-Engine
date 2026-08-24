@@ -1,0 +1,9 @@
+{
+    "engine": "Orvexa",
+    "version": 1,
+    "fullscreen": false,
+    "resolution": {
+        "width": 1280,
+        "height": 720
+    }
+}

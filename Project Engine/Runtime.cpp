@@ -1,94 +1,178 @@
-#include "runtime.h"
-#include <iostream>
+
+#include "Runtime.h"
+#include "Logger.h"
+#include "FileSystem.h"
+#include "JsonParser.h"
 
 namespace engine::core
 {
-	Runtime::Runtime()
-	{
-	}
+	// Constructor for the engine runtime
+    Runtime::Runtime()
+    {
+        LOG_TRACE("Runtime constructor called");
+    }
 
-	Runtime::~Runtime()
-	{
-		Shutdown();
-	}
+	// Destructor for the engine runtime
+    Runtime::~Runtime()
+    {
+        LOG_TRACE("Runtime destructor called");
+        Shutdown();
+    }
 
-	bool Runtime::Initialize()
-	{
-		if (!m_window.Create(1280, 720, "My Engine"))
-			return false;
+	// Initialize the engine runtime
+    bool Runtime::Initialize()
+    {
+		// Initialize the logger
+        LOG_INFO("Initializing Orvexa Engine...");
 
-		m_is_running = true;
+		// Create the engine window
+        if (!m_window.Create(1280, 720, "Orvexa Engine"))
+        {
+            LOG_ERROR("Failed to create engine window");
+            return false;
+        }
 
-		return true;
-	}
+        LOG_INFO("Window created: {}x{}", 1280, 720);
 
-	void Runtime::Run()
-	{
-		if (!m_is_running)
-			return;
+		// Initialize the input system
+        m_is_running = true;
 
-		while (m_is_running)
-		{
-			ProcessEvents();
+		// Initialize the time system
+        LOG_INFO("Orvexa Engine initialized");
+        LOG_TRACE("Trace message");
+        LOG_INFO("Hello Orvexa Engine!");
+        LOG_WARNING("This is a warning");
+        LOG_ERROR("This is an error");
 
-			m_time.Update();
+        LOG_INFO("Integer: {}", 42);
+        LOG_INFO("Float: {:.2f}", 3.14159f);
+        LOG_INFO("Resolution: {}x{}", 1920, 1080);
 
-			Update();
-			Render();
+        const std::filesystem::path asset_path = "assets";
 
-			m_input.Update();
-		}
-	}
+        if (FileSystem::Exists(asset_path))
+        {
+            LOG_INFO("Assets directory exists");
+        }
+        else
+        {
+            LOG_WARNING("Assets directory does not exist");
+        }
 
-	void Runtime::Shutdown()
-	{
-		if (!m_is_running)
-			return;
+        nlohmann::json config;
 
-		m_window.Close();
+        if (engine::parser::JsonParser::Load("../config/test.json", config))
+        {
+            LOG_INFO("Engine: {}", config["engine"].get<std::string>());
+            LOG_INFO("Version: {}", config["version"].get<int>());
+            LOG_INFO(
+                "Resolution: {}x{}",
+                config["resolution"]["width"].get<int>(),
+                config["resolution"]["height"].get<int>()
+            );
+        }
 
-		m_is_running = false;
-	}
+        return true;
+    }
 
-	bool Runtime::IsRunning() const
-	{
-		return m_is_running;
-	}
+	// Run the engine runtime
+    void Runtime::Run()
+    {
+		// Check if the engine is running
+        if (!m_is_running)
+        {
+            LOG_WARNING("Runtime::Run() called while engine is not running");
+            return;
+        }
 
-	void Runtime::ProcessEvents()
-	{
-		while (const auto event = m_window.PollEvent())
-		{
-			if (event->is<sf::Event::Closed>())
-			{
-				m_is_running = false;
-				continue;
-			}
+        LOG_INFO("Engine loop started");
+		// Main engine loop
+        while (m_is_running)
+        {
+            ProcessEvents();
 
-			m_input.ProcessEvent(*event);
-		}
-	}
+            m_time.Update();
 
-	void Runtime::Update()
-	{
-		/*if (m_input.IsKeyDown(Key::F1))
-			std::cout
-			<< "FPS: " << m_time.GetFPS()
-			<< " | Delta: " << m_time.GetDeltaTime()
-			<< " | Elapsed: " << m_time.GetElapsedTime()
-			<< '\n';
+            Update();
+            Render();
 
-		if (m_input.IsKeyPressed(Key::W))
-			std::cout << "W PRESSED\n";
+            m_input.Update();
+        }
 
-		if (m_input.IsKeyDown(Key::W))
-			std::cout << "W DOWN\n";
+        LOG_INFO("Engine loop stopped");
+    }
 
-		if (m_input.IsKeyReleased(Key::W))
-			std::cout << "W RELEASED\n";*/
-	}
+	// Shutdown the engine runtime
+    void Runtime::Shutdown()
+    {
+        if (!m_is_running)
+            return;
 
-	void Runtime::Render()
-	{
-	}
+        LOG_INFO("Shutting down Orvexa Engine...");
+
+        m_window.Close();
+
+        m_is_running = false;
+
+        LOG_INFO("Orvexa Engine shutdown complete");
+    }
+
+	// Check if the engine is running
+    bool Runtime::IsRunning() const
+    {
+        return m_is_running;
+    }
+
+	// Process events from the engine window
+    void Runtime::ProcessEvents()
+    {
+		// Poll events from the window and process them
+        while (const auto event = m_window.PollEvent())
+        {
+            if (event->is<sf::Event::Closed>())
+            {
+                LOG_INFO("Window close event received");
+
+                m_is_running = false;
+                continue;
+            }
+
+            m_input.ProcessEvent(*event);
+        }
+    }
+
+	// Update the engine runtime
+    void Runtime::Update()
+    {
+		// Update the engine runtime
+        if (m_input.IsKeyDown(Key::F1))
+        {
+            LOG_INFO(
+                "FPS: {} | Delta: {} | Elapsed: {}",
+                m_time.GetFPS(),
+                m_time.GetDeltaTime(),
+                m_time.GetElapsedTime()
+            );
+        }
+
+		// Check for key events
+        if (m_input.IsKeyPressed(Key::W))
+        {
+            LOG_INFO("W pressed");
+        }
+
+        if (m_input.IsKeyDown(Key::W))
+        {
+            LOG_TRACE("W down");
+        }
+
+        if (m_input.IsKeyReleased(Key::W))
+        {
+            LOG_INFO("W released");
+        }
+    }
+
+    void Runtime::Render()
+    {
+    }
 }
