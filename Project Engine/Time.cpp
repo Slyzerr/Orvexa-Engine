@@ -26,6 +26,8 @@ namespace engine::core
 	{
 		m_last_time = std::chrono::steady_clock::now();
 		m_delta_time = 0.0f;
+		m_elapsed_time = 0.0f;
+		m_fps = 0.0f;
 	}
 
 	float Time::GetDeltaTime() const
