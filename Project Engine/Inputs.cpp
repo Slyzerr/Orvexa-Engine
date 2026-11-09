@@ -45,6 +45,18 @@ namespace engine::core
 	// Processes an SFML event and updates the input state accordingly
 	void Input::ProcessEvent(const sf::Event& event)
 	{
+		// Handle focus lost event
+		if (event.is<sf::Event::FocusLost>())
+		{
+			for (std::size_t i = 0; i < KEY_COUNT; ++i)
+				m_current_keys[i] = false;
+
+			for (std::size_t i = 0; i < MOUSE_BUTTON_COUNT; ++i)
+				m_current_mouse_buttons[i] = false;
+
+			return;
+		}
+
 		// Handle key press events
 		if (const auto* key_pressed =
 			event.getIf<sf::Event::KeyPressed>())
@@ -200,6 +212,7 @@ namespace engine::core
 				m_current_keys[static_cast<std::size_t>(Key::CAPS_LOCK)] = true;
 				break;
 			case sf::Keyboard::Scancode::LShift:
+			case sf::Keyboard::Scancode::RShift:
 				m_current_keys[static_cast<std::size_t>(Key::SHIFT)] = true;
 				break;
 			case sf::Keyboard::Scancode::LControl:
@@ -442,6 +455,7 @@ namespace engine::core
 				m_current_keys[static_cast<std::size_t>(Key::CAPS_LOCK)] = false;
 				break;
 
+			case sf::Keyboard::Scancode::RShift:
 			case sf::Keyboard::Scancode::LShift:
 				m_current_keys[static_cast<std::size_t>(Key::SHIFT)] = false;
 				break;
@@ -575,12 +589,12 @@ namespace engine::core
 			if (mouse_wheel->wheel ==
 				sf::Mouse::Wheel::Vertical)
 			{
-				m_vertical_wheel_delta = mouse_wheel->delta;
+				m_vertical_wheel_delta += mouse_wheel->delta;
 			}
 			else if (mouse_wheel->wheel ==
 				sf::Mouse::Wheel::Horizontal)
 			{
-				m_horizontal_wheel_delta = mouse_wheel->delta;
+				m_horizontal_wheel_delta += mouse_wheel->delta;
 			}
 		}
 

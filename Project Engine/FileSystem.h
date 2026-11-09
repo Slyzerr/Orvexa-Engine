@@ -13,7 +13,7 @@ namespace engine::core
 		static bool IsFile(const std::filesystem::path& path);
 		static bool IsDirectory(const std::filesystem::path& path);
 
-		static bool CreateDirectory(const std::filesystem::path& path);
+		static bool CreateDirectories(const std::filesystem::path& path);
 
 		static std::string ReadText(const std::filesystem::path& path);
 		static bool WriteText(

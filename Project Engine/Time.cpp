@@ -22,6 +22,12 @@ namespace engine::core
 		m_last_time = current_time;
 	}
 
+	void Time::Reset()
+	{
+		m_last_time = std::chrono::steady_clock::now();
+		m_delta_time = 0.0f;
+	}
+
 	float Time::GetDeltaTime() const
 	{
 		return m_delta_time;

@@ -28,6 +28,7 @@ namespace engine::core
         Input m_input;
 		Time m_time;
 
+        bool m_is_initialized = false;
         bool m_is_running = false;
     };
 }

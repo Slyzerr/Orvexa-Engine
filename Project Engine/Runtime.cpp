@@ -72,6 +72,7 @@ namespace engine::core
             );
         }
 
+        m_is_initialized = true;
         return true;
     }
 
@@ -84,7 +85,7 @@ namespace engine::core
             LOG_WARNING("Runtime::Run() called while engine is not running");
             return;
         }
-
+        m_time.Reset();
         LOG_INFO("Engine loop started");
 		// Main engine loop
         while (m_is_running)
@@ -105,15 +106,13 @@ namespace engine::core
 	// Shutdown the engine runtime
     void Runtime::Shutdown()
     {
-        if (!m_is_running)
+        if(!m_is_initialized)
             return;
 
         LOG_INFO("Shutting down Orvexa Engine...");
-
         m_window.Close();
-
         m_is_running = false;
-
+        m_is_initialized = false;
         LOG_INFO("Orvexa Engine shutdown complete");
     }
 

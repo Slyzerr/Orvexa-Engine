@@ -11,7 +11,7 @@ namespace engine::core
         ~Time();
 
         void Update();
-
+        void Reset();
         float GetDeltaTime() const;
         float GetElapsedTime() const;
         float GetFPS() const;

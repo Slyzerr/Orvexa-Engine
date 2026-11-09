@@ -20,10 +20,11 @@ namespace engine::core
 		return std::filesystem::is_directory(path);
 	}
 
-	bool FileSystem::CreateDirectory(
-		const std::filesystem::path& path)
+	bool FileSystem::CreateDirectories(const std::filesystem::path& path)
 	{
-		return std::filesystem::create_directories(path);
+		std::error_code error;
+		std::filesystem::create_directories(path, error);
+		return !error;
 	}
 
 	std::string FileSystem::ReadText(
