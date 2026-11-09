@@ -1,18 +1,17 @@
+
 #include "Window.h"
 
 namespace engine::core
 {
-    Window::Window()
+    bool Window::Create(
+        unsigned int width,
+        unsigned int height,
+        const std::string& title
+    )
     {
-    }
+        if (width == 0 || height == 0)
+            return false;
 
-    Window::~Window()
-    {
-        Close();
-    }
-
-    bool Window::Create(unsigned int width, unsigned int height, const std::string& title)
-    {
         m_window.create(
             sf::VideoMode({ width, height }),
             title
@@ -24,9 +23,7 @@ namespace engine::core
     void Window::Close()
     {
         if (m_window.isOpen())
-        {
             m_window.close();
-        }
     }
 
     bool Window::IsOpen() const
@@ -36,6 +33,9 @@ namespace engine::core
 
     std::optional<sf::Event> Window::PollEvent()
     {
+        if (!m_window.isOpen())
+            return std::nullopt;
+
         return m_window.pollEvent();
     }
 }

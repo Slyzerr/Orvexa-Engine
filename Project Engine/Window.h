@@ -3,16 +3,14 @@
 #include <string>
 #include <optional>
 
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Window/VideoMode.hpp>
 
 namespace engine::core
 {
     class Window
     {
     public:
-        Window();
-        ~Window();
-
         bool Create(
             unsigned int width,
             unsigned int height,
