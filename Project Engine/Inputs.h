@@ -137,6 +137,15 @@ namespace engine::core
         bool m_current_keys[KEY_COUNT];
         bool m_previous_keys[KEY_COUNT];
 
+        bool m_left_shift = false;
+        bool m_right_shift = false;
+
+        bool m_left_ctrl = false;
+        bool m_right_ctrl = false;
+
+        bool m_left_alt = false;
+        bool m_right_alt = false;
+
         bool m_current_mouse_buttons[MOUSE_BUTTON_COUNT];
         bool m_previous_mouse_buttons[MOUSE_BUTTON_COUNT];
 

@@ -54,6 +54,15 @@ namespace engine::core
 			for (std::size_t i = 0; i < MOUSE_BUTTON_COUNT; ++i)
 				m_current_mouse_buttons[i] = false;
 
+			m_left_shift = false;
+			m_right_shift = false;
+
+			m_left_ctrl = false;
+			m_right_ctrl = false;
+
+			m_left_alt = false;
+			m_right_alt = false;
+
 			return;
 		}
 
@@ -212,13 +221,32 @@ namespace engine::core
 				m_current_keys[static_cast<std::size_t>(Key::CAPS_LOCK)] = true;
 				break;
 			case sf::Keyboard::Scancode::LShift:
-			case sf::Keyboard::Scancode::RShift:
+				m_left_shift = true;
 				m_current_keys[static_cast<std::size_t>(Key::SHIFT)] = true;
 				break;
+
+			case sf::Keyboard::Scancode::RShift:
+				m_right_shift = true;
+				m_current_keys[static_cast<std::size_t>(Key::SHIFT)] = true;
+				break;
+
 			case sf::Keyboard::Scancode::LControl:
+				m_left_ctrl = true;
 				m_current_keys[static_cast<std::size_t>(Key::CTRL)] = true;
 				break;
+
+			case sf::Keyboard::Scancode::RControl:
+				m_right_ctrl = true;
+				m_current_keys[static_cast<std::size_t>(Key::CTRL)] = true;
+				break;
+
 			case sf::Keyboard::Scancode::LAlt:
+				m_left_alt = true;
+				m_current_keys[static_cast<std::size_t>(Key::ALT)] = true;
+				break;
+
+			case sf::Keyboard::Scancode::RAlt:
+				m_right_alt = true;
 				m_current_keys[static_cast<std::size_t>(Key::ALT)] = true;
 				break;
 			case sf::Keyboard::Scancode::Backspace:
@@ -455,17 +483,34 @@ namespace engine::core
 				m_current_keys[static_cast<std::size_t>(Key::CAPS_LOCK)] = false;
 				break;
 
-			case sf::Keyboard::Scancode::RShift:
 			case sf::Keyboard::Scancode::LShift:
-				m_current_keys[static_cast<std::size_t>(Key::SHIFT)] = false;
+				m_left_shift = false;
+				m_current_keys[static_cast<std::size_t>(Key::SHIFT)] = m_right_shift;
+				break;
+
+			case sf::Keyboard::Scancode::RShift:
+				m_right_shift = false;
+				m_current_keys[static_cast<std::size_t>(Key::SHIFT)] = m_left_shift;
 				break;
 
 			case sf::Keyboard::Scancode::LControl:
-				m_current_keys[static_cast<std::size_t>(Key::CTRL)] = false;
+				m_left_ctrl = false;
+				m_current_keys[static_cast<std::size_t>(Key::CTRL)] = m_right_ctrl;
+				break;
+
+			case sf::Keyboard::Scancode::RControl:
+				m_right_ctrl = false;
+				m_current_keys[static_cast<std::size_t>(Key::CTRL)] = m_left_ctrl;
 				break;
 
 			case sf::Keyboard::Scancode::LAlt:
-				m_current_keys[static_cast<std::size_t>(Key::ALT)] = false;
+				m_left_alt = false;
+				m_current_keys[static_cast<std::size_t>(Key::ALT)] = m_right_alt;
+				break;
+
+			case sf::Keyboard::Scancode::RAlt:
+				m_right_alt = false;
+				m_current_keys[static_cast<std::size_t>(Key::ALT)] = m_left_alt;
 				break;
 
 			case sf::Keyboard::Scancode::Backspace:
@@ -609,6 +654,9 @@ namespace engine::core
 	// Checks if a specific key is currently down
 	bool Input::IsKeyDown(Key key) const
 	{
+		if (key >= Key::COUNT)
+			return false;
+
 		return m_current_keys[
 			static_cast<std::size_t>(key)
 		];
@@ -617,6 +665,9 @@ namespace engine::core
 	// Checks if a specific key was pressed in the current frame
 	bool Input::IsKeyPressed(Key key) const
 	{
+		if (key >= Key::COUNT)
+			return false;
+
 		const std::size_t index =
 			static_cast<std::size_t>(key);
 
@@ -627,6 +678,9 @@ namespace engine::core
 	// Checks if a specific key was released in the current frame
 	bool Input::IsKeyReleased(Key key) const
 	{
+		if (key >= Key::COUNT)
+			return false;
+
 		const std::size_t index =
 			static_cast<std::size_t>(key);
 
@@ -637,6 +691,9 @@ namespace engine::core
 	// Checks if a specific mouse button is currently down
 	bool Input::IsMouseButtonDown(MouseButton button) const
 	{
+		if (button >= MouseButton::COUNT)
+			return false;
+
 		return m_current_mouse_buttons[
 			static_cast<std::size_t>(button)
 		];
@@ -645,6 +702,9 @@ namespace engine::core
 	// Checks if a specific mouse button was pressed in the current frame
 	bool Input::IsMouseButtonPressed(MouseButton button) const
 	{
+		if (button >= MouseButton::COUNT)
+			return false;
+
 		const std::size_t index =
 			static_cast<std::size_t>(button);
 
@@ -655,6 +715,9 @@ namespace engine::core
 	// Checks if a specific mouse button was released in the current frame
 	bool Input::IsMouseButtonReleased(MouseButton button) const
 	{
+		if (button >= MouseButton::COUNT)
+			return false;
+
 		const std::size_t index =
 			static_cast<std::size_t>(button);
 

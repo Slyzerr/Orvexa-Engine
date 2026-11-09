@@ -12,13 +12,15 @@ namespace engine::core
 	}
 	void Time::Update()
 	{
-		auto current_time = std::chrono::steady_clock::now();
-		std::chrono::duration<float> delta_time = current_time - m_last_time;
+		const auto current_time = std::chrono::steady_clock::now();
+
+		const std::chrono::duration<float> delta_time = current_time - m_last_time;
+
 		m_delta_time = delta_time.count();
 		m_elapsed_time += m_delta_time;
-		if (m_delta_time > 0.0f) {
-			m_fps = 1.0f / m_delta_time;
-		}
+
+		m_fps = (m_delta_time > 0.0f) ? 1.0f / m_delta_time : 0.0f;
+
 		m_last_time = current_time;
 	}
 
@@ -26,6 +28,8 @@ namespace engine::core
 	{
 		m_last_time = std::chrono::steady_clock::now();
 		m_delta_time = 0.0f;
+		m_elapsed_time = 0.0f;
+		m_fps = 0.0f;
 	}
 
 	float Time::GetDeltaTime() const
